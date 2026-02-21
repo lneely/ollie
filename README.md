@@ -1,6 +1,6 @@
 # Ollie
 
-A Go CLI that connects Ollama LLMs to MCP (Model Context Protocol) servers for tool use.
+A Go CLI that connects Ollama LLMs to MCP (Model Context Protocol) servers for tool use. Built because I couldn't find what I wanted with existing tools.
 
 ## Quick Start
 
