@@ -52,16 +52,14 @@ MCP server commands must be in your PATH.
 
 ## Usage
 
-The REPL accepts multi-line input and submits on ENTER. Tools are discovered automatically from connected MCP servers.
+Chat history displays in a scrollable viewport. Type in the multi-line text area below, submit with Enter (Ctrl+J for new lines).
+
+Tools depend on which MCP servers you configure. Example with filesystem server:
 
 ```
 > What files are in the current directory?
-[Tool: list_directory]
+[Calling tool from filesystem server]
 Found: main.go, config/, mcp/, ollama/, tools/
-
-> Create a file called test.txt
-[Tool: write_file]
-Created test.txt
 ```
 
 ## Troubleshooting
