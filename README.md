@@ -1,39 +1,32 @@
-# Ollama MCP Client
+# Ollie
 
-A minimal Go CLI application that connects Ollama LLMs to MCP (Model Context Protocol) servers, enabling tool use.
+A Go CLI that connects Ollama LLMs to MCP (Model Context Protocol) servers for tool use.
 
-## Features
+## Quick Start
 
-- Simple REPL interface with `>` prompt
-- Multi-line input support (submit on ENTER)
-- JSON configuration for MCP servers
-- STDIO transport support for MCP servers
-- Tool discovery and execution
-- Conversation history
-
-## Requirements
-
+**Requirements:**
 - Go 1.21+
-- Ollama running locally (default: http://localhost:11434)
-- MCP servers configured in JSON file
+- Ollama running locally (http://localhost:11434)
 
-## Installation
-
+**Build:**
 ```bash
-go build -o ollama-mcp-client
+go build
 ```
+
+**Run:**
+```bash
+./ollie config.json [model]
+```
+
+Default model is `qwen3:8b`. Override with any Ollama model name.
 
 ## Configuration
 
-Create a JSON configuration file with your MCP servers:
+Create a JSON file defining your MCP servers:
 
 ```json
 {
   "mcpServers": {
-    "anvilmcp": {
-      "command": "anvilmcp",
-      "args": []
-    },
     "filesystem": {
       "command": "mcp-server-filesystem",
       "args": ["/path/to/allowed/directory"],
@@ -41,7 +34,7 @@ Create a JSON configuration file with your MCP servers:
         "DEBUG": "true"
       }
     },
-    "disabled-server": {
+    "disabled-example": {
       "command": "some-server",
       "disabled": true
     }
@@ -49,63 +42,42 @@ Create a JSON configuration file with your MCP servers:
 }
 ```
 
-### Configuration Options
+**Options:**
+- `command` - MCP server executable (required)
+- `args` - Command arguments (optional)
+- `env` - Environment variables (optional)
+- `disabled` - Skip this server (optional)
 
-- `command`: Executable command for STDIO MCP server
-- `args`: Command-line arguments (optional)
-- `env`: Environment variables (optional)
-- `disabled`: Skip this server (optional)
+MCP server commands must be in your PATH.
 
 ## Usage
 
-```bash
-./ollama-mcp-client config.json [model]
-```
-
-Default model: `qwen3:8b`
-
-Example with custom model:
-```bash
-./ollama-mcp-client config.json llama3.2
-```
-
-### Example Session
+The REPL accepts multi-line input and submits on ENTER. Tools are discovered automatically from connected MCP servers.
 
 ```
 > What files are in the current directory?
-[Tool execution: list_directory]
-The current directory contains: main.go, config/, mcp/, ollama/, tools/
+[Tool: list_directory]
+Found: main.go, config/, mcp/, ollama/, tools/
 
-> Create a new file called test.txt
-[Tool execution: write_file]
-Created test.txt successfully.
+> Create a file called test.txt
+[Tool: write_file]
+Created test.txt
 ```
-
-## Architecture
-
-- `main.go`: REPL loop and orchestration
-- `config/`: JSON configuration parser
-- `mcp/`: MCP protocol client and STDIO transport
-- `ollama/`: Ollama API client
-- `tools/`: Tool executor and manager
 
 ## Troubleshooting
 
-### No servers connected
-- Check that MCP server commands are in your PATH
-- Verify command names and arguments in config
-- Check logs for connection errors
+**No servers connected**
+- Verify MCP server commands are in PATH
+- Check command names and arguments in config
 
-### Tools not working
-- Ensure MCP servers support the `tools/list` and `tools/call` methods
-- Check tool execution logs for errors
-- Verify tool arguments match expected schema
+**Tools not working**
+- Ensure servers support `tools/list` and `tools/call`
+- Check tool arguments match expected schema
 
-### Ollama errors
-- Ensure Ollama is running: `ollama serve`
-- Check model is available: `ollama list`
-- Verify Ollama URL (default: http://localhost:11434)
+**Ollama errors**
+- Start Ollama: `ollama serve`
+- Verify model exists: `ollama list`
 
 ## License
 
-MIT
+GPLv3
